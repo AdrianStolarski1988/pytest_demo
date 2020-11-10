@@ -24,6 +24,6 @@ class Helper(object):
             WebDriverWait(self.driver, 4).until(EC.presence_of_element_located((By.XPATH, element)))
         except NoSuchElementException as e:
             logging.error(e)
-            logging.warning("elementu nie znaleziono")
+            logging.warning("not found element")
             return False
         return True

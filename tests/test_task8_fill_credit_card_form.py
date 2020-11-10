@@ -11,12 +11,12 @@ def test_choose_task(selenium_driver):
 
     """
 
-    glowna = MainPage.Main(selenium_driver)
-    glowna.visit()
+    site = MainPage.Main(selenium_driver)
+    site.visit()
 
-    glowna.choose_task8()
+    site.choose_task8()
 
-    assert "/task_8" in glowna.get_current_url()
+    assert "/task_8" in site.get_current_url()
 
 def test_send_confirm_credit_card(selenium_driver):
     """

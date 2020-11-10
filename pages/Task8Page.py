@@ -69,7 +69,7 @@ class Page8(Helper):
 
     def alert_is_present(self):
         aa =   self.verify_exist_element(success_alert)
-        assert aa is True, "alert nie jest wyswietlony"
+        assert aa is True, "expected alert is not displayed"
 
 
 
