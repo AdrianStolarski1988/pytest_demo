@@ -1,22 +1,44 @@
 import pytest
+import time
+
 from pages import MainPage
 from pages import Task8Page
 
-def test_choose_task(selenium_driver):
+
+def test_choose_all_tasks(selenium_driver):
     """
     scenario:
-    1. entrance to home site  https://testingcup.pgs-soft.com
-    2. clicking on task8 button
-    3. checking correction url
-
+    1. entrence to site and counter numbers of tests
+    2. in loop enterence to test and checking correction of url
+    3. back to site with tasks and repeat step 2
     """
+    errors = []
 
+    # entrence to tasks site
     site = MainPage.Main(selenium_driver)
     site.visit()
 
-    site.choose_task8()
+    #counter of tasks box
+    tasks = site.count_test_tasks()
 
-    assert "/task_8" in site.get_current_url()
+
+    for i in range(1,tasks):
+
+        # clicking on box with task
+        site.choose_task_nb(i)
+
+        # checking url
+        strona = site.get_current_url()
+
+        # checking correction of url
+        if not "/task_{}".format(str(i)) in strona:
+            errors.append("not correct url number %s" % str(i))
+        site.back()
+
+
+    #if array of errors is not empty test will be failed
+    assert not errors, "errors occured:\n{}".format("\n".join(errors))
+
 
 def test_send_confirm_credit_card(selenium_driver):
     """
@@ -44,3 +66,5 @@ def test_send_confirm_credit_card(selenium_driver):
 
     #checking the display of the alert
     task.alert_is_present()
+
+
