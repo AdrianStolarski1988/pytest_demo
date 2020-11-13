@@ -31,3 +31,7 @@ class Main(Helper):
 
     def back(self):
         self.driver.back()
+
+
+    def get_text_from_element(self, element):
+        return self.driver.find_element_by_xpath(element).text

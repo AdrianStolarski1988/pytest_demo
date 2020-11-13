@@ -11,7 +11,23 @@ class BasicTest:
 
 class TestTestingCupSite(BasicTest):
 
-    def test_choose_all_tasks(self, selenium_driver):
+    @pytest.fixture(name="site", scope="function")
+    def visit_main_site(self, selenium_driver):
+        """entrence to site before tests"""
+
+        site = MainPage.Main(selenium_driver)
+        site.visit()
+        yield site
+
+    @pytest.fixture(name="task8")
+    def visit_site8(self, selenium_driver):
+        """entrence to task8 site before tests"""
+
+        task = Task8Page.Page8(selenium_driver)
+        task.visit()
+        yield task
+
+    def test_choose_all_tasks_in_main_site(self, site):
         """
         scenario:
         1. entrence to site and counter numbers of tests
@@ -21,8 +37,8 @@ class TestTestingCupSite(BasicTest):
         errors = []
 
         # entrence to tasks site
-        site = MainPage.Main(selenium_driver)
-        site.visit()
+        # site = MainPage.Main(selenium_driver)
+        # site.visit()
 
         #counter of tasks box
         tasks = site.count_test_tasks()
@@ -46,7 +62,7 @@ class TestTestingCupSite(BasicTest):
         assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
 
-    def test_send_confirm_credit_card(self, selenium_driver):
+    def test_task8_register_the_card_correctly(self, task8):
         """
         scenario
         1. entrance on the home site
@@ -57,20 +73,41 @@ class TestTestingCupSite(BasicTest):
         """
 
         #entrance on the home site
-        task= Task8Page.Page8(selenium_driver)
-        task.visit()
+        # task= Task8Page.Page8(selenium_driver)
+        # task.visit()
 
 
         #filling the form
-        task.select_visa_cart()
-        task.fill_cart_number("4111111111111111")
-        task.fill_name("Ad rian")
-        task.fill_cart_cvv("123")
-        task.select_month_cart_experience("12")
-        task.select_year_cart_experience("2030")
-        task.confirm_form()
+        task8.select_visa_cart()
+        task8.fill_cart_number("4111111111111111")
+        task8.fill_name("Ad rian")
+        task8.fill_cart_cvv("123")
+        task8.select_month_cart_experience("12")
+        task8.select_year_cart_experience("2030")
+        task8.confirm_form()
 
         #checking the display of the alert
-        task.alert_is_present()
+        task8.alert_is_present()
 
 
+    def test_task8_send_the_form_with_the_expiry_date_of_cart(self, task8):
+        """
+        scenario
+        1. entrance on the home site
+        2. checking of display form
+        3. filling the form with incorrect month
+        4. checking the display of the alert
+
+        """
+
+        #filling the form
+        task8.select_visa_cart()
+        task8.fill_cart_number("4111111111111111")
+        task8.fill_name("Ad rian")
+        task8.fill_cart_cvv("123")
+        task8.select_month_cart_experience("01")
+        task8.select_year_cart_experience("2020")
+        task8.confirm_form()
+
+        #checking the display of the alert
+        task8.an_invalid_card_message_is_displayed("Upłynął termin ważności karty")
