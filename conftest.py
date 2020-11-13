@@ -1,29 +1,42 @@
+import os
+
 import pytest
 import time
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 
 browser = None
 
 
-@pytest.fixture(scope='session')
-def selenium_driver():
+def browser_config(browser_options):
+    browser_options.add_argument('--headless')
+    browser_options.add_argument('--no-sandbox')
+    browser_options.add_argument('--disable-dev-shm-usage')
+    return browser_options
+
+
+@pytest.fixture(params=["chrome", "firefox"], scope="class")
+def selenium_driver(request):
     global browser
-    if browser is None:
 
-        browser_options = Options()
-        # chrome_options.add_argument('--headless')
-        browser_options.add_argument('--no-sandbox')
-        browser_options.add_argument('--disable-dev-shm-usage')
-
+    if request.param == "chrome":
+        browser_options = ChromeOptions()
+        browser_config(browser_options)
         browser = webdriver.Chrome(options=browser_options)
-        browser.set_window_size(1920, 1080)
-        browser.maximize_window()
-        browser.implicitly_wait(5)
+
+    if request.param == "firefox":
+        browser_options = FirefoxOptions()
+        browser_config(browser_options)
+        browser = webdriver.Firefox(options=browser_options)
+
+    browser.set_window_size(1920, 1080)
+    browser.maximize_window()
+    browser.implicitly_wait(5)
 
     yield browser
-    browser.quit()
+    browser.close()
     return browser
 
 
@@ -34,15 +47,14 @@ def pytest_runtest_makereport(item, call):
     report = outcome.get_result()
     extra = getattr(report, 'extra', [])
     timestamp = str(int(time.time()))
-    print("raport")
-    # if report.when == 'call':
 
-        # TODO do zrobienia dodawanie screenow do raportow
-        # if report.failed:
-            # dodawanie url do raportow - lista screenow?
+    if report.when == 'call':
+
+    # TODO do zrobienia dodawanie screenow do raportow
+        if report.failed:
+            #dodawanie url do raportow - lista screenow?
             # extra.append(pytest_html.extras.url('http://www.example.com/')
-
-            # browser.save_screenshot("screenshots/" + timestamp + '.png')
-            # extra.append(pytest_html.extras.image("screenshots/"+ timestamp + '.png'))
-            # extra.append(pytest_html.extras.image("screenshots/error.png"))
+            screenshot_name = "tests/screenshots/" + timestamp + ".png"
+            browser.save_screenshot(screenshot_name)
+            extra.append(pytest_html.extras.image(screenshot_name))
     report.extra = extra

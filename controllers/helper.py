@@ -5,8 +5,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 class Helper(object):
+
+    
+
     def __init__(self, driver):
         self.driver = driver
+
 
 
     def verify_exist_element(self, element):
@@ -21,9 +25,10 @@ class Helper(object):
 
     def check_element_is_displayed(self, element):
         try:
-            WebDriverWait(self.driver, 4).until(EC.presence_of_element_located((By.XPATH, element)))
+            self.driver.find_element_by_xpath(element)
         except NoSuchElementException as e:
             logging.error(e)
             logging.warning("not found element")
             return False
         return True
+
