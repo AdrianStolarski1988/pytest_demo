@@ -13,7 +13,7 @@ class TestTestingCupSite(BasicTest):
 
     @pytest.fixture(name="site", scope="function")
     def visit_main_site(self, selenium_driver):
-        """entrence to site before tests"""
+        """entrance to site before tests"""
 
         site = MainPage.Main(selenium_driver)
         site.visit()
@@ -21,7 +21,7 @@ class TestTestingCupSite(BasicTest):
 
     @pytest.fixture(name="task8")
     def visit_site8(self, selenium_driver):
-        """entrence to task8 site before tests"""
+        """entrance to task8 site before tests"""
 
         task = Task8Page.Page8(selenium_driver)
         task.visit()
@@ -30,8 +30,8 @@ class TestTestingCupSite(BasicTest):
     def test_choose_all_tasks_in_main_site(self, site):
         """
         scenario:
-        1. entrence to site and counter numbers of tests
-        2. in loop enterence to test and checking correction of url
+        1. entrance to site and counter numbers of tests
+        2. in loop enterance to test and checking correction of url
         3. back to site with tasks and repeat step 2
         """
         errors = []
@@ -106,7 +106,7 @@ class TestTestingCupSite(BasicTest):
         task8.fill_name("Ad rian")
         task8.fill_cart_cvv("123")
         task8.select_month_cart_experience("01")
-        task8.select_year_cart_experience("2020")
+        task8.select_year_cart_experience("2021")
         task8.confirm_form()
 
         #checking the display of the alert
