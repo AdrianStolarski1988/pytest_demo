@@ -4,6 +4,7 @@ import time
 from pages import MainPage
 from pages import Task8Page
 
+
 @pytest.mark.usefixtures("selenium_driver")
 class BasicTest:
     pass
@@ -12,18 +13,18 @@ class BasicTest:
 class TestTestingCupSite(BasicTest):
 
     @pytest.fixture(name="site", scope="function")
-    def visit_main_site(self, selenium_driver):
+    def visit_main_site(self):
         """entrance to site before tests"""
 
-        site = MainPage.Main(selenium_driver)
+        site = MainPage.Main(self.browser)
         site.visit()
         yield site
 
     @pytest.fixture(name="task8")
-    def visit_site8(self, selenium_driver):
+    def visit_site8(self):
         """entrance to task8 site before tests"""
 
-        task = Task8Page.Page8(selenium_driver)
+        task = Task8Page.Page8(self.browser)
         task.visit()
         yield task
 
@@ -36,15 +37,10 @@ class TestTestingCupSite(BasicTest):
         """
         errors = []
 
-        # entrence to tasks site
-        # site = MainPage.Main(selenium_driver)
-        # site.visit()
-
-        #counter of tasks box
+        # counter of tasks box
         tasks = site.count_test_tasks()
 
-
-        for i in range(1,tasks):
+        for i in range(1, tasks):
 
             # clicking on box with task
             site.choose_task_nb(i)
@@ -57,10 +53,8 @@ class TestTestingCupSite(BasicTest):
                 errors.append("not correct url number %s" % str(i))
             site.back()
 
-
-        #if array of errors is not empty test will be failed
+        # if array of errors is not empty test will be failed
         assert not errors, "errors occured:\n{}".format("\n".join(errors))
-
 
     def test_task8_register_the_card_correctly(self, task8):
         """
@@ -72,12 +66,7 @@ class TestTestingCupSite(BasicTest):
 
         """
 
-        #entrance on the home site
-        # task= Task8Page.Page8(selenium_driver)
-        # task.visit()
-
-
-        #filling the form
+        # filling the form
         task8.select_visa_cart()
         task8.fill_cart_number("4111111111111111")
         task8.fill_name("Ad rian")
@@ -86,9 +75,8 @@ class TestTestingCupSite(BasicTest):
         task8.select_year_cart_experience("2030")
         task8.confirm_form()
 
-        #checking the display of the alert
+        # checking the display of the alert
         task8.alert_is_present()
-
 
     def test_task8_send_the_form_with_the_expiry_date_of_cart(self, task8):
         """
@@ -100,7 +88,7 @@ class TestTestingCupSite(BasicTest):
 
         """
 
-        #filling the form
+        # filling the form
         task8.select_visa_cart()
         task8.fill_cart_number("4111111111111111")
         task8.fill_name("Ad rian")
@@ -109,5 +97,5 @@ class TestTestingCupSite(BasicTest):
         task8.select_year_cart_experience("2021")
         task8.confirm_form()
 
-        #checking the display of the alert
+        # checking the display of the alert
         task8.an_invalid_card_message_is_displayed("Upłynął termin ważności karty")
